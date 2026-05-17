@@ -1,0 +1,16 @@
+
+{% extends "base.html" %}
+{% block title %}Security{% endblock %}
+{% block content %}
+<h2 class="mb-4">Security & Escalations</h2>
+<form method="post" action="{{ url_for('admin.trigger_escalation') }}" class="mb-3">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="btn btn-warning">Trigger Escalation Check Now</button>
+</form>
+<h4>Failed Logins</h4>
+<div class="card gv-card mb-4"><table class="table mb-0"><thead><tr><th>Time</th><th>User ID</th><th>IP</th></tr></thead>
+<tbody>{% for log in failed_logs %}<tr><td>{{ log.timestamp }}</td><td>{{ log.user_id }}</td><td>{{ log.ip_address }}</td></tr>{% else %}<tr><td colspan="3" class="text-muted">None</td></tr>{% endfor %}</tbody></table></div>
+<h4>Active Escalations</h4>
+<div class="card gv-card"><table class="table mb-0"><thead><tr><th>Type</th><th>User</th><th>Details</th><th>When</th></tr></thead>
+<tbody>{% for e in escalations %}<tr><td>{{ e.rule_type }}</td><td>{{ e.target_user.name if e.target_user else '—' }}</td><td>{{ e.details }}</td><td>{{ e.triggered_at }}</td></tr>{% else %}<tr><td colspan="4" class="text-muted">No escalations</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

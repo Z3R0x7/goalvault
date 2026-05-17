@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if edit_mode else 'Create' }} Goal{% endblock %}
+{% block page_title %}{{ 'Edit Goal' if edit_mode else 'Create Goal' }}{% endblock %}
+{% block page_sub %}<span class="data-value">{{ remaining }}</span>% weightage available{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    {% if remaining < 10 %}
+    <div class="alert alert-warning mb-3">Weightage fully allocated ({{ existing_total|int }}% used). Free weightage by editing a draft goal.</div>
+    {% endif %}
+    <form method="post" id="goal-form"{% if edit_mode %} action="{{ url_for('employee.goal_edit', goal_id=goal.id) }}"{% endif %}>
+      {{ form.hidden_tag() }}
+      {% if form.errors %}
+      <div class="alert alert-danger mb-3">
+        {% for field, errs in form.errors.items() %}
+          {% for err in errs %}<div>{{ field }}: {{ err }}</div>{% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="vault-card p-4">
+        <div class="row g-3">
+          <div class="col-md-6">
+            {{ form.thrust_area.label(class="form-label") }}
+            {{ form.thrust_area(class="form-select vault-input") }}
+          </div>
+          <div class="col-12">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control vault-input", id="title") }}
+          </div>
+          <div class="col-12">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control vault-input", id="description", rows=3) }}
+          </div>
+          <div class="col-md-6">
+            {{ form.uom_type.label(class="form-label") }}
+            {{ form.uom_type(class="form-select vault-input", id="uom_type") }}
+          </div>
+          <div class="col-md-3">
+            {{ form.target.label(class="form-label") }}
+            {{ form.target(class="form-control vault-input", id="target", min="0", step="any") }}
+          </div>
+          <div class="col-md-3">
+            {{ form.weightage.label(class="form-label") }}
+            {{ form.weightage(class="form-control vault-input", id="weightage", min="10", max=remaining, step="0.1") }}
+          </div>
+          <div class="col-12">
+            <label class="form-label">Weightage allocation</label>
+            <div class="vault-progress-track mb-1" style="height:8px">
+              <div id="weightage-used" class="vault-progress-fill" style="width:{{ existing_total }}%;opacity:0.35"></div>
+              <div id="weightage-bar" class="vault-progress-fill" style="width:0%;margin-top:-8px"></div>
+            </div>
+            <small id="weightage-remaining" class="text-secondary">{{ remaining }}% available</small>
+          </div>
+          <div class="col-12 d-flex gap-2">
+            {{ form.submit(class="btn-vault", id="goal-submit-btn") }}
+            <a href="{{ url_for('employee.goal_list') }}" class="btn-vault-ghost">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-lg-4">
+    <div class="ai-panel p-3">
+      <h5 class="mb-2"><i class="bi bi-stars" style="color:var(--accent)"></i> AI Goal Coach</h5>
+      <p class="small text-secondary">Analyse your goal before saving.</p>
+      <button type="button" id="ai-analyse-btn" class="btn-vault-ghost w-100 mb-2">Analyse My Goal</button>
+      <div id="ai-result-panel" style="display:none"></div>
+      <input type="hidden" id="csrf_token_val" value="{{ csrf_token() }}">
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>window.EXISTING_WEIGHTAGE = {{ existing_total }}; window.REMAINING_WEIGHTAGE = {{ remaining }};</script>
+<script src="{{ url_for('static', filename='js/goal_form.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ai_coach.js') }}"></script>
+{% endblock %}

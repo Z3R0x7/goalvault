@@ -1,0 +1,13 @@
+
+{% extends "base.html" %}
+{% block title %}Team Goals{% endblock %}
+{% block content %}
+<h2 class="mb-4">Team Goals</h2>
+{% for item in team_data %}
+<div class="card gv-card mb-3"><div class="card-header"><strong>{{ item.employee.name }}</strong> — {{ item.employee.department or 'N/A' }}
+  <a href="{{ url_for('manager.checkin', employee_id=item.employee.id) }}" class="btn btn-sm btn-outline-primary float-end">Q1 Check-in</a>
+</div>
+<div class="table-responsive"><table class="table mb-0"><thead><tr><th>Goal</th><th>Status</th><th>Weight</th><th>Target</th></tr></thead>
+<tbody>{% for g in item.goals %}<tr><td>{{ g.title }}</td><td>{{ g.status }}</td><td>{{ g.weightage }}%</td><td>{{ g.target }}</td></tr>{% else %}<tr><td colspan="4" class="text-muted">No goals</td></tr>{% endfor %}</tbody></table></div></div>
+{% endfor %}
+{% endblock %}

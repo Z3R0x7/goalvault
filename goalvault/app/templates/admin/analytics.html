@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Analytics{% endblock %}
+{% block page_title %}Organisation Analytics{% endblock %}
+{% block page_sub %}Real-time completion and department performance{% endblock %}
+{% block content %}
+<div class="row g-4 mb-4">
+  <div class="col-lg-6"><div class="vault-card p-3 fade-in"><h5 class="mb-3">Completion Funnel</h5><canvas id="funnelChart" height="220"></canvas></div></div>
+  <div class="col-lg-6"><div class="vault-card p-3 fade-in"><h5 class="mb-3">Score Distribution</h5><canvas id="distChart" height="220"></canvas></div></div>
+</div>
+<div class="vault-card fade-in">
+  <div class="vault-card-header">Department Heatmap</div>
+  <div class="table-responsive"><table class="vault-table" id="heatmapTable"><thead><tr><th>Department</th><th>Approved</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th></tr></thead><tbody></tbody></table></div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>{% endblock %}

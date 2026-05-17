@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Sign In{% endblock %}
+{% block auth_content %}
+<div class="login-page">
+  <div class="login-brand">
+    <div class="login-mark">GV</div>
+    <h1 style="font-weight:300;font-size:2rem;margin-bottom:0.5rem">Secure. Measurable. Accountable.</h1>
+    <p class="text-secondary mb-4">Tamper-evident goal intelligence for enterprise teams.</p>
+    <div class="d-flex flex-column gap-3">
+      <div><i class="bi bi-shield-lock text-success me-2"></i> Hash-chained audit trail</div>
+      <div><i class="bi bi-stars text-success me-2"></i> AI-assisted goal coaching</div>
+      <div><i class="bi bi-graph-up text-success me-2"></i> Real-time completion analytics</div>
+    </div>
+  </div>
+  <div class="login-form-panel">
+    <div class="login-card">
+      <h2 class="mb-1">Sign in</h2>
+      <p class="text-secondary small mb-4">GoalVault v1.0 — Secured by design</p>
+      <form method="post">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.email.label(class="form-label") }}
+          {{ form.email(class="form-control vault-input", placeholder="you@company.com") }}
+        </div>
+        <div class="mb-4">
+          {{ form.password.label(class="form-label") }}
+          {{ form.password(class="form-control vault-input") }}
+        </div>
+        {{ form.submit(class="btn-vault w-100") }}
+      </form>
+      <button type="button" class="btn-microsoft" title="Azure AD SSO — configured for production tenant.">
+        <i class="bi bi-microsoft"></i> Sign in with Microsoft
+      </button>
+      <hr class="my-4 border-secondary">
+      <p class="small text-muted mb-1">Demo accounts — password: <span class="data-value">Demo@123</span></p>
+      <ul class="small text-muted mb-0 ps-3">
+        <li>employee@goalvault.com</li>
+        <li>manager@goalvault.com</li>
+        <li>admin@goalvault.com</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

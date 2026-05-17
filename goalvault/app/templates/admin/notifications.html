@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+{% block page_sub %}Enterprise integration settings{% endblock %}
+{% block content %}
+<div class="vault-card p-4 mb-3">
+  <h5><i class="bi bi-microsoft"></i> Microsoft Teams</h5>
+  <p class="text-secondary">Teams adaptive cards and webhook notifications — enterprise integration ready for production tenant.</p>
+  <button class="btn-vault-ghost" disabled>Configure Webhook (Production)</button>
+</div>
+<div class="vault-card p-4">
+  <h5><i class="bi bi-envelope"></i> Email Notifications</h5>
+  <p class="text-secondary">Automated emails for goal submission, approval, and check-in reminders.</p>
+  <button class="btn-vault-ghost" disabled>Connect SMTP (Production)</button>
+</div>
+{% endblock %}

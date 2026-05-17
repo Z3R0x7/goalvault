@@ -1,0 +1,20 @@
+
+{% extends "base.html" %}
+{% block title %}Achievement — {{ goal.title }}{% endblock %}
+{% block content %}
+<h2 class="mb-3">{{ goal.title }} — {{ quarter }} Achievement</h2>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card gv-card mb-3"><div class="card-body">
+      <p><strong>Target:</strong> {{ goal.target }} ({{ goal.uom_type }})</p>
+      <p><strong>Weightage:</strong> {{ goal.weightage }}%</p>
+    </div></div>
+    <form method="post">{{ form.hidden_tag() }}
+      <div class="mb-3">{{ form.actual_value.label(class="form-label") }}{{ form.actual_value(class="form-control") }}</div>
+      <div class="mb-3">{{ form.status.label(class="form-label") }}{{ form.status(class="form-select") }}</div>
+      {{ form.submit(class="btn btn-primary") }}
+      <a href="{{ url_for('employee.dashboard') }}" class="btn btn-link">Back</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+
+{% extends "base.html" %}
+{% block title %}Completion Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Completion Dashboard</h2>
+<div class="row mb-4"><div class="col-md-6"><div class="card gv-stat"><div class="card-body"><h6>Employees with submissions</h6><h2>{{ submitted_pct }}%</h2></div></div>
+<div class="col-md-6"><div class="card gv-stat"><div class="card-body"><h6>Employees with approvals</h6><h2>{{ approved_pct }}%</h2></div></div></div>
+<div class="card gv-card"><table class="table mb-0"><thead><tr><th>Employee</th><th>Goals</th><th>Submitted</th><th>Approved</th><th>Check-ins</th></tr></thead>
+<tbody>{% for s in stats %}<tr><td>{{ s.employee.name }}</td><td>{{ s.goals_total }}</td><td>{{ s.submitted }}</td><td>{{ s.approved }}</td><td>{{ s.checkins }}</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

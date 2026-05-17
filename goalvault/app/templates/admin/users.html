@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+{% block title %}User Management{% endblock %}
+{% block content %}
+<h2 class="mb-4">Users</h2>
+<div class="row"><div class="col-md-5">
+<div class="card gv-card mb-4"><div class="card-header">Add User</div><div class="card-body">
+<form method="post">{{ form.hidden_tag() }}
+{% for field in [form.name, form.email, form.password, form.role, form.department, form.manager_id] %}
+<div class="mb-2">{{ field.label(class="form-label") }}{{ field(class="form-control") }}</div>{% endfor %}
+{{ form.submit(class="btn btn-primary") }}
+</form></div></div></div>
+<div class="col-md-7"><div class="card gv-card"><div class="table-responsive"><table class="table mb-0">
+<thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead>
+<tbody>{% for u in users %}
+<tr><td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.role }}</td><td>{{ 'Active' if u.is_active else 'Inactive' }}</td>
+<td><form method="post" action="{{ url_for('admin.toggle_user', user_id=u.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-secondary">Toggle</button></form></td></tr>
+{% endfor %}</tbody></table></div></div></div></div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Escalations{% endblock %}
+{% block page_title %}Escalation Rules{% endblock %}
+{% block page_sub %}Automated accountability triggers{% endblock %}
+{% block content %}
+<form method="post" action="{{ url_for('admin.trigger_escalation') }}" class="mb-3 d-inline">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="btn-vault">Trigger Check Now</button>
+</form>
+<form method="post" class="row g-3 mb-4">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="col-md-4 escalation-card">
+    <h5>Goal Not Submitted</h5>
+    <p class="small text-secondary">Days after window opens</p>
+    <input name="goal_submit_days" type="number" class="form-control vault-input data-value" value="{{ settings.goal_submit_days }}">
+    <p class="mt-2 small">Triggered: {{ by_type.goal_not_submitted|length }}</p>
+    <ul class="small">{% for e in by_type.goal_not_submitted %}<li>{{ e.details }}</li>{% endfor %}</ul>
+  </div>
+  <div class="col-md-4 escalation-card">
+    <h5>Goal Not Approved</h5>
+    <input name="goal_approve_days" type="number" class="form-control vault-input" value="{{ settings.goal_approve_days }}">
+    <p class="mt-2 small">Triggered: {{ by_type.goal_not_approved|length }}</p>
+    <ul class="small">{% for e in by_type.goal_not_approved %}<li>{{ e.details }}</li>{% endfor %}</ul>
+  </div>
+  <div class="col-md-4 escalation-card">
+    <h5>Check-in Missed</h5>
+    <input name="checkin_days" type="number" class="form-control vault-input" value="{{ settings.checkin_days }}">
+    <p class="mt-2 small">Triggered: {{ by_type.checkin_missed|length }}</p>
+    <ul class="small">{% for e in by_type.checkin_missed %}<li>{{ e.details }}</li>{% endfor %}</ul>
+  </div>
+  <div class="col-12"><button type="submit" class="btn-vault-ghost">Save Thresholds</button></div>
+</form>
+{% endblock %}

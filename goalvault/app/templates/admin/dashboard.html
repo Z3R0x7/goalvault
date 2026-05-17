@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block page_title %}Admin Overview{% endblock %}
+{% block page_sub %}Organisation-wide goal intelligence{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col fade-in"><div class="metric-card"><div class="metric-value">{{ employees }}</div><div class="metric-label">Employees</div></div></div>
+  <div class="col fade-in"><div class="metric-card"><div class="metric-value">{{ total_goals }}</div><div class="metric-label">Total Goals</div></div></div>
+  <div class="col fade-in"><div class="metric-card approved"><div class="metric-value">{{ approved }}</div><div class="metric-label">Approved</div></div></div>
+  <div class="col fade-in"><div class="metric-card pending"><div class="metric-value">{{ submitted }}</div><div class="metric-label">Pending</div></div></div>
+</div>
+<div class="d-flex flex-wrap gap-2">
+  <a href="{{ url_for('admin.analytics') }}" class="btn-vault">Analytics</a>
+  <a href="{{ url_for('admin.completion') }}" class="btn-vault-ghost">Completion</a>
+  <a href="{{ url_for('admin.audit_trail') }}" class="btn-vault-ghost">Audit Trail</a>
+  <a href="/api/export/achievement-report" class="btn-vault">Export Excel</a>
+</div>
+{% endblock %}

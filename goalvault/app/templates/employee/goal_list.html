@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}My Goals{% endblock %}
+{% block content %}
+<h2 class="mb-4">My Goals <span class="badge bg-secondary">{{ weightage_used }}% used</span></h2>
+<div class="mb-3"><a href="{{ url_for('employee.goal_create') }}" class="btn btn-primary">Create Goal</a></div>
+<div class="card gv-card"><div class="table-responsive"><table class="table mb-0">
+<thead><tr><th>Title</th><th>Thrust</th><th>UoM</th><th>Target</th><th>Weight</th><th>Status</th><th></th></tr></thead>
+<tbody>{% for g in goals %}
+<tr><td>{{ g.title }}</td><td>{{ g.thrust_area }}</td><td>{{ g.uom_type }}</td><td>{{ g.target }}</td><td>{{ g.weightage }}%</td>
+<td><span class="badge bg-info">{{ g.status }}</span></td>
+<td>{% if g.is_editable %}<a href="{{ url_for('employee.goal_edit', goal_id=g.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+<form method="post" action="{{ url_for('employee.goal_submit', goal_id=g.id) }}" class="d-inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-success">Submit</button></form>{% endif %}</td></tr>
+{% else %}<tr><td colspan="7" class="text-center py-4 text-muted">No goals</td></tr>{% endfor %}</tbody></table></div></div>
+{% endblock %}

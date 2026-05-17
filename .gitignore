@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Secrets and local config
+.env
+.env.local
+*.pem
+credentials.json
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Logs and caches
+*.log
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Cursor / local tooling
+.cursor/
+
+# Optional: keep repo lean (problem statement stays local)
+# Uncomment to exclude the binary docx:
+# *.docx

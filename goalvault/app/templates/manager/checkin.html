@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}
+{% block title %}Check-in — {{ employee.name }}{% endblock %}
+{% block content %}
+<h2 class="mb-3">{{ employee.name }} — {{ quarter }} Check-in</h2>
+<div class="card gv-card mb-3"><div class="table-responsive"><table class="table mb-0">
+<thead><tr><th>Goal</th><th>Planned</th><th>Actual</th><th>Status</th><th>Progress</th></tr></thead>
+<tbody>{% for item in goals_data %}
+<tr><td>{{ item.goal.title }}</td><td>{{ item.goal.target }}</td><td>{{ item.actual }}</td><td>{{ item.status }}</td>
+<td>{% if item.achievement %}{{ item.achievement.progress_score }}%{% else %}—{% endif %}</td></tr>
+{% endfor %}</tbody></table></div></div>
+<button type="button" id="ai-summary-btn" class="btn btn-outline-primary mb-3" data-employee-id="{{ employee.id }}">Generate AI Summary</button>
+<form method="post">{{ form.hidden_tag() }}
+  {{ form.comment(class="form-control mb-2", rows=5, id="checkin-comment") }}
+  {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById('ai-summary-btn')?.addEventListener('click', async () => {
+  const btn = document.getElementById('ai-summary-btn');
+  btn.disabled = true; btn.textContent = 'Generating...';
+  const res = await fetch('/manager/api/ai-checkin-summary/{{ employee.id }}?quarter={{ quarter }}');
+  const data = await res.json();
+  document.getElementById('checkin-comment').value = data.comment;
+  btn.disabled = false; btn.textContent = 'Generate AI Summary';
+});
+</script>
+{% endblock %}

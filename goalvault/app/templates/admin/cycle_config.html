@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+{% block title %}Cycle Config{% endblock %}
+{% block content %}
+<h2 class="mb-4">Cycle Configuration</h2>
+<div class="row"><div class="col-md-5"><div class="card gv-card"><div class="card-body">
+<form method="post">{{ form.hidden_tag() }}
+{% for field in [form.phase, form.window_open, form.window_close, form.escalation_days] %}
+<div class="mb-3">{{ field.label(class="form-label") }}{{ field(class="form-control") }}</div>{% endfor %}
+{{ form.submit(class="btn btn-primary") }}
+</form></div></div>
+<div class="col-md-7"><div class="card gv-card"><table class="table mb-0"><thead><tr><th>Phase</th><th>Open</th><th>Close</th><th>Escalation Days</th></tr></thead>
+<tbody>{% for c in configs %}<tr><td>{{ c.phase }}</td><td>{{ c.window_open }}</td><td>{{ c.window_close }}</td><td>{{ c.escalation_days }}</td></tr>{% endfor %}</tbody></table></div></div></div>
+{% endblock %}
