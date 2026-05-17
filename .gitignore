@@ -46,3 +46,6 @@ htmlcov/
 # Optional: keep repo lean (problem statement stays local)
 # Uncomment to exclude the binary docx:
 # *.docx
+scripts/
+HOW_TO_RUN.md
+HOW_TO_DEPLOY.md

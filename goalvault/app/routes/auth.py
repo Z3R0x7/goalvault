@@ -87,6 +87,12 @@ def logout():
     return redirect(url_for("auth.login"))
 
 
+@auth_bp.route("/login/microsoft")
+@limiter.limit("5 per minute")
+def login_microsoft():
+    flash("Microsoft Azure AD SSO is configured for the production tenant. Please use the demo accounts for this environment.", "info")
+    return redirect(url_for("auth.login"))
+
 def _role_dashboard(role):
     return {
         "employee": url_for("employee.dashboard"),

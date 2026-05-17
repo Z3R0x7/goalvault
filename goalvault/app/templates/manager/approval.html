@@ -1,25 +1,57 @@
-
 {% extends "base.html" %}
 {% block title %}Pending Approvals{% endblock %}
+{% block page_title %}Pending Approvals{% endblock %}
+{% block page_sub %}Review and approve team goals.{% endblock %}
 {% block content %}
-<h2 class="mb-4">Pending Approvals</h2>
-{% for goal in goals %}
-<div class="card gv-card mb-4"><div class="card-body">
-  <h5>{{ goal.title }} <span class="badge bg-secondary">{{ goal.employee.name }}</span></h5>
-  <p>{{ goal.description }}</p>
-  <p><strong>Thrust:</strong> {{ goal.thrust_area }} | <strong>UoM:</strong> {{ goal.uom_type }} | <strong>Target:</strong> {{ goal.target }} | <strong>Weight:</strong> {{ goal.weightage }}%</p>
-  <form method="post" action="{{ url_for('manager.approve_goal', goal_id=goal.id) }}" class="row g-2 align-items-end">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <div class="col-md-2"><label class="form-label">Target</label><input name="target" type="number" step="any" class="form-control" value="{{ goal.target }}"></div>
-    <div class="col-md-2"><label class="form-label">Weightage</label><input name="weightage" type="number" class="form-control" value="{{ goal.weightage }}"></div>
-    <div class="col-md-4"><label class="form-label">Comment</label><input name="comment" class="form-control" placeholder="Optional"></div>
-    <div class="col-md-2"><button type="submit" class="btn btn-success w-100">Approve & Lock</button></div>
-  </form>
-  <form method="post" action="{{ url_for('manager.return_goal', goal_id=goal.id) }}" class="mt-2">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <input name="comment" class="form-control mb-2" placeholder="Reason for return (required)" required>
-    <button type="submit" class="btn btn-outline-warning">Return for Rework</button>
-  </form>
-</div></div>
-{% else %}<p class="text-muted">No pending approvals.</p>{% endfor %}
+<div class="row g-4 fade-in">
+  {% for goal in goals %}
+  <div class="col-12">
+    <div class="vault-card p-4">
+      <h5 class="mb-3">{{ goal.title }} <span class="badge rounded-pill bg-dark border border-secondary text-light ms-2" style="font-weight: 400;"><i class="bi bi-person me-1"></i>{{ goal.employee.name }}</span></h5>
+      <p class="text-secondary mb-4">{{ goal.description }}</p>
+      
+      <div class="d-flex flex-wrap gap-4 mb-4 pb-4 border-bottom border-secondary" style="font-size: 0.9rem;">
+        <div><span class="text-muted">Thrust:</span> {{ goal.thrust_area }}</div>
+        <div><span class="text-muted">UoM:</span> {{ goal.uom_type }}</div>
+        <div><span class="text-muted">Target:</span> <span class="data-value">{{ goal.target }}</span></div>
+        <div><span class="text-muted">Weight:</span> <span class="data-value">{{ goal.weightage }}%</span></div>
+      </div>
+      
+      <form method="post" action="{{ url_for('manager.approve_goal', goal_id=goal.id) }}" class="row g-3 align-items-end mb-3">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-md-2">
+          <label class="form-label">Target</label>
+          <input name="target" type="number" step="any" class="form-control vault-input" value="{{ goal.target }}">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Weightage</label>
+          <input name="weightage" type="number" class="form-control vault-input" value="{{ goal.weightage }}">
+        </div>
+        <div class="col-md-5">
+          <label class="form-label">Comment</label>
+          <input name="comment" class="form-control vault-input" placeholder="Optional approval note">
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn-vault w-100"><i class="bi bi-check-circle me-1"></i> Approve & Lock</button>
+        </div>
+      </form>
+      
+      <form method="post" action="{{ url_for('manager.return_goal', goal_id=goal.id) }}" class="row g-2 align-items-center">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-md-9">
+          <input name="comment" class="form-control vault-input" placeholder="Reason for return (required)" required>
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn-vault-ghost w-100" style="color: var(--status-rework); border-color: var(--status-rework);"><i class="bi bi-arrow-return-left me-1"></i> Return for Rework</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12 text-center text-secondary py-5">
+    <i class="bi bi-check-all mb-3" style="font-size: 3rem;"></i>
+    <p>All caught up! No pending approvals.</p>
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}

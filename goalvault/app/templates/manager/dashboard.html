@@ -1,13 +1,30 @@
-
 {% extends "base.html" %}
 {% block title %}Manager Dashboard{% endblock %}
+{% block page_title %}Manager Dashboard{% endblock %}
+{% block page_sub %}Team performance and pending approvals.{% endblock %}
 {% block content %}
-<h2 class="mb-4">Team Dashboard</h2>
 <div class="row g-3 mb-4">
-  <div class="col-md-4"><div class="card gv-stat"><div class="card-body"><h6 class="text-muted">Team Size</h6><h2>{{ team|length }}</h2></div></div></div>
-  <div class="col-md-4"><div class="card gv-stat"><div class="card-body"><h6 class="text-muted">Pending Approvals</h6><h2 class="text-warning">{{ pending_count }}</h2></div></div></div>
-  <div class="col-md-4"><div class="card gv-stat"><div class="card-body"><h6 class="text-muted">Approved Goals</h6><h2 class="text-success">{{ approved_count }}</h2></div></div></div>
+  <div class="col-md-4 fade-in">
+    <div class="metric-card">
+      <div class="metric-value">{{ team|length }}</div>
+      <div class="metric-label">Team Size</div>
+    </div>
+  </div>
+  <div class="col-md-4 fade-in">
+    <div class="metric-card pending">
+      <div class="metric-value">{{ pending_count }}</div>
+      <div class="metric-label">Pending Approvals</div>
+    </div>
+  </div>
+  <div class="col-md-4 fade-in">
+    <div class="metric-card approved">
+      <div class="metric-value">{{ approved_count }}</div>
+      <div class="metric-label">Approved Goals</div>
+    </div>
+  </div>
 </div>
-<a href="{{ url_for('manager.approvals') }}" class="btn btn-primary me-2">Review Approvals</a>
-<a href="{{ url_for('manager.team_goals') }}" class="btn btn-outline-primary">View Team Goals</a>
+<div class="d-flex gap-2 fade-in" style="animation-delay: 0.2s;">
+  <a href="{{ url_for('manager.approvals') }}" class="btn-vault">Review Approvals</a>
+  <a href="{{ url_for('manager.team_goals') }}" class="btn-vault-ghost">View Team Goals</a>
+</div>
 {% endblock %}

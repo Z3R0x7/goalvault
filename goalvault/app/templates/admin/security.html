@@ -1,16 +1,70 @@
-
 {% extends "base.html" %}
 {% block title %}Security{% endblock %}
+{% block page_title %}Security{% endblock %}
+{% block page_sub %}System security events and access logs.{% endblock %}
 {% block content %}
-<h2 class="mb-4">Security & Escalations</h2>
-<form method="post" action="{{ url_for('admin.trigger_escalation') }}" class="mb-3">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button class="btn btn-warning">Trigger Escalation Check Now</button>
-</form>
-<h4>Failed Logins</h4>
-<div class="card gv-card mb-4"><table class="table mb-0"><thead><tr><th>Time</th><th>User ID</th><th>IP</th></tr></thead>
-<tbody>{% for log in failed_logs %}<tr><td>{{ log.timestamp }}</td><td>{{ log.user_id }}</td><td>{{ log.ip_address }}</td></tr>{% else %}<tr><td colspan="3" class="text-muted">None</td></tr>{% endfor %}</tbody></table></div>
-<h4>Active Escalations</h4>
-<div class="card gv-card"><table class="table mb-0"><thead><tr><th>Type</th><th>User</th><th>Details</th><th>When</th></tr></thead>
-<tbody>{% for e in escalations %}<tr><td>{{ e.rule_type }}</td><td>{{ e.target_user.name if e.target_user else '—' }}</td><td>{{ e.details }}</td><td>{{ e.triggered_at }}</td></tr>{% else %}<tr><td colspan="4" class="text-muted">No escalations</td></tr>{% endfor %}</tbody></table></div>
+<div class="mb-4 fade-in">
+  <form method="post" action="{{ url_for('admin.trigger_escalation') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn-vault"><i class="bi bi-shield-lock me-2"></i>Trigger Escalation Check Now</button>
+  </form>
+</div>
+
+<h4 class="mb-3">Failed Logins</h4>
+<div class="vault-card mb-4 fade-in" style="animation-delay: 0.1s;">
+  <div class="table-responsive">
+    <table class="vault-table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>User ID</th>
+          <th>IP Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in failed_logs %}
+        <tr>
+          <td class="cycle-date">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+          <td class="data-value">{{ log.user_id }}</td>
+          <td class="data-value text-secondary">{{ log.ip_address }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" class="text-center text-muted py-4">No failed logins recorded.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h4 class="mb-3">Active Escalations</h4>
+<div class="vault-card fade-in" style="animation-delay: 0.2s;">
+  <div class="table-responsive">
+    <table class="vault-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>User</th>
+          <th>Details</th>
+          <th>Triggered</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in escalations %}
+        <tr>
+          <td><span class="status-badge badge-rework">{{ e.rule_type }}</span></td>
+          <td>{{ e.target_user.name if e.target_user else '—' }}</td>
+          <td class="text-secondary">{{ e.details }}</td>
+          <td class="cycle-date">{{ e.triggered_at.strftime('%Y-%m-%d %H:%M') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4" class="text-center text-muted py-4">No active escalations.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

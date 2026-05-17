@@ -1,14 +1,61 @@
-
 {% extends "base.html" %}
 {% block title %}Cycle Config{% endblock %}
 {% block content %}
-<h2 class="mb-4">Cycle Configuration</h2>
-<div class="row"><div class="col-md-5"><div class="card gv-card"><div class="card-body">
-<form method="post">{{ form.hidden_tag() }}
-{% for field in [form.phase, form.window_open, form.window_close, form.escalation_days] %}
-<div class="mb-3">{{ field.label(class="form-label") }}{{ field(class="form-control") }}</div>{% endfor %}
-{{ form.submit(class="btn btn-primary") }}
-</form></div></div>
-<div class="col-md-7"><div class="card gv-card"><table class="table mb-0"><thead><tr><th>Phase</th><th>Open</th><th>Close</th><th>Escalation Days</th></tr></thead>
-<tbody>{% for c in configs %}<tr><td>{{ c.phase }}</td><td>{{ c.window_open }}</td><td>{{ c.window_close }}</td><td>{{ c.escalation_days }}</td></tr>{% endfor %}</tbody></table></div></div></div>
+<div class="d-flex justify-content-between align-items-end mb-4">
+  <div>
+    <h1 class="vault-page-title">Cycle Configuration</h1>
+    <p class="vault-page-sub">Manage performance phases and escalation windows.</p>
+  </div>
+</div>
+
+<div class="row g-4 fade-in">
+  <div class="col-md-5">
+    <div class="vault-card">
+      <div class="vault-card-header">Update Phase</div>
+      <div class="p-4">
+        <form method="post">
+          {{ form.hidden_tag() }}
+          {% for field in [form.phase, form.window_open, form.window_close, form.escalation_days] %}
+          <div class="mb-3">
+            {{ field.label(class="form-label") }}
+            {{ field(class="form-control vault-input") }}
+          </div>
+          {% endfor %}
+          <div class="mt-4">
+            {{ form.submit(class="btn-vault w-100") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <div class="vault-card h-100">
+      <div class="vault-card-header">Current Configurations</div>
+      <div class="table-responsive">
+        <table class="vault-table">
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>Open</th>
+              <th>Close</th>
+              <th>Escalation Days</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in configs %}
+            <tr>
+              <td>
+                <span class="status-badge badge-locked">{{ c.phase }}</span>
+              </td>
+              <td class="data-value">{{ c.window_open }}</td>
+              <td class="data-value">{{ c.window_close }}</td>
+              <td class="data-value text-center">{{ c.escalation_days }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -2,16 +2,72 @@
 {% block page_title %}Admin Overview{% endblock %}
 {% block page_sub %}Organisation-wide goal intelligence{% endblock %}
 {% block content %}
-<div class="row g-3 mb-4">
-  <div class="col fade-in"><div class="metric-card"><div class="metric-value">{{ employees }}</div><div class="metric-label">Employees</div></div></div>
-  <div class="col fade-in"><div class="metric-card"><div class="metric-value">{{ total_goals }}</div><div class="metric-label">Total Goals</div></div></div>
-  <div class="col fade-in"><div class="metric-card approved"><div class="metric-value">{{ approved }}</div><div class="metric-label">Approved</div></div></div>
-  <div class="col fade-in"><div class="metric-card pending"><div class="metric-value">{{ submitted }}</div><div class="metric-label">Pending</div></div></div>
+<div class="d-flex justify-content-between align-items-end mb-4 fade-in">
+  <div>
+    <h1 class="vault-page-title">Admin Overview</h1>
+    <p class="vault-page-sub">Organisation-wide goal intelligence and system status.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('admin.analytics') }}" class="btn-vault">
+      <i class="bi bi-graph-up me-1"></i> Analytics
+    </a>
+    <a href="/api/export/achievement-report" class="btn-vault">
+      <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+    </a>
+  </div>
 </div>
-<div class="d-flex flex-wrap gap-2">
-  <a href="{{ url_for('admin.analytics') }}" class="btn-vault">Analytics</a>
-  <a href="{{ url_for('admin.completion') }}" class="btn-vault-ghost">Completion</a>
-  <a href="{{ url_for('admin.audit_trail') }}" class="btn-vault-ghost">Audit Trail</a>
-  <a href="/api/export/achievement-report" class="btn-vault">Export Excel</a>
+
+<div class="row g-3 mb-4">
+  <div class="col fade-in">
+    <div class="metric-card">
+      <div class="metric-value">{{ employees }}</div>
+      <div class="metric-label">Employees</div>
+    </div>
+  </div>
+  <div class="col fade-in">
+    <div class="metric-card">
+      <div class="metric-value">{{ total_goals }}</div>
+      <div class="metric-label">Total Goals</div>
+    </div>
+  </div>
+  <div class="col fade-in">
+    <div class="metric-card approved">
+      <div class="metric-value">{{ approved }}</div>
+      <div class="metric-label">Approved</div>
+    </div>
+  </div>
+  <div class="col fade-in">
+    <div class="metric-card pending">
+      <div class="metric-value">{{ submitted }}</div>
+      <div class="metric-label">Pending</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 fade-in" style="animation-delay: 0.3s;">
+  <div class="col-md-6">
+    <div class="vault-card h-100">
+      <div class="vault-card-header d-flex justify-content-between align-items-center">
+        Completion Tracking
+        <a href="{{ url_for('admin.completion') }}" class="btn-vault-ghost" style="padding: 4px 10px; font-size: 0.8rem;">View All</a>
+      </div>
+      <div class="p-4 text-center">
+        <i class="bi bi-clipboard2-check text-secondary mb-3" style="font-size: 2.5rem; display: block;"></i>
+        <p class="text-secondary mb-0">Track organization-wide goal submission and approval rates to ensure full participation.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="vault-card h-100">
+      <div class="vault-card-header d-flex justify-content-between align-items-center">
+        Security & Audit
+        <a href="{{ url_for('admin.audit_trail') }}" class="btn-vault-ghost" style="padding: 4px 10px; font-size: 0.8rem;">Verify Chain</a>
+      </div>
+      <div class="p-4 text-center">
+        <i class="bi bi-shield-check text-secondary mb-3" style="font-size: 2.5rem; display: block;"></i>
+        <p class="text-secondary mb-0">Review the cryptographically hashed audit trail for tampering and verify chain integrity.</p>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

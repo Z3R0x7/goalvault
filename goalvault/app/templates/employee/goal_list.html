@@ -1,14 +1,57 @@
 {% extends "base.html" %}
 {% block title %}My Goals{% endblock %}
+{% block page_title %}My Goals{% endblock %}
+{% block page_sub %}Manage your performance objectives. Weight used: <span class="badge bg-secondary">{{ weightage_used }}%</span>{% endblock %}
 {% block content %}
-<h2 class="mb-4">My Goals <span class="badge bg-secondary">{{ weightage_used }}% used</span></h2>
-<div class="mb-3"><a href="{{ url_for('employee.goal_create') }}" class="btn btn-primary">Create Goal</a></div>
-<div class="card gv-card"><div class="table-responsive"><table class="table mb-0">
-<thead><tr><th>Title</th><th>Thrust</th><th>UoM</th><th>Target</th><th>Weight</th><th>Status</th><th></th></tr></thead>
-<tbody>{% for g in goals %}
-<tr><td>{{ g.title }}</td><td>{{ g.thrust_area }}</td><td>{{ g.uom_type }}</td><td>{{ g.target }}</td><td>{{ g.weightage }}%</td>
-<td><span class="badge bg-info">{{ g.status }}</span></td>
-<td>{% if g.is_editable %}<a href="{{ url_for('employee.goal_edit', goal_id=g.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-<form method="post" action="{{ url_for('employee.goal_submit', goal_id=g.id) }}" class="d-inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-success">Submit</button></form>{% endif %}</td></tr>
-{% else %}<tr><td colspan="7" class="text-center py-4 text-muted">No goals</td></tr>{% endfor %}</tbody></table></div></div>
+<div class="d-flex justify-content-end mb-4 fade-in">
+  <a href="{{ url_for('employee.goal_create') }}" class="btn-vault"><i class="bi bi-plus-circle me-1"></i>Create Goal</a>
+</div>
+
+<div class="vault-card fade-in" style="animation-delay: 0.1s;">
+  <div class="vault-card-header">Current Cycle Goals</div>
+  <div class="table-responsive">
+    <table class="vault-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Thrust Area</th>
+          <th>UoM</th>
+          <th>Target</th>
+          <th>Weight</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in goals %}
+        <tr>
+          <td>{{ g.title }}</td>
+          <td class="text-secondary">{{ g.thrust_area }}</td>
+          <td class="text-secondary">{{ g.uom_type }}</td>
+          <td class="data-value">{{ g.target }}</td>
+          <td class="data-value">{{ g.weightage }}%</td>
+          <td><span class="status-badge badge-{{ g.status.lower() }}">{{ g.status }}</span></td>
+          <td>
+            {% if g.is_editable %}
+            <div class="d-flex gap-2">
+              <a href="{{ url_for('employee.goal_edit', goal_id=g.id) }}" class="btn-vault-ghost" style="padding: 4px 10px; font-size: 0.8rem;">Edit</a>
+              <form method="post" action="{{ url_for('employee.goal_submit', goal_id=g.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn-vault" style="padding: 4px 10px; font-size: 0.8rem; background: var(--status-approved); color: #fff; box-shadow: none;">Submit</button>
+              </form>
+            </div>
+            {% else %}
+              <span class="text-muted small">Locked</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="7" class="text-center py-4 text-muted">No goals created yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

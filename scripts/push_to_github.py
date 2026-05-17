@@ -18,6 +18,8 @@ BLOCKED_PATTERNS = [
     r"(^|/)instance/",
     r"\.pem$",
     r"credentials\.json$",
+    r"HOW_TO_RUN\.md$",
+    r"HOW_TO_DEPLOY\.md$",
 ]
 
 def run(cmd, cwd=ROOT, check=True, capture=False):
@@ -144,86 +146,32 @@ def push(branch, set_upstream):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Stage safe files, commit, and push to GitHub using git + gh."
-    )
-    parser.add_argument(
-        "-m",
-        "--message",
-        default="Update GoalVault",
-        help="Commit message",
-    )
-    parser.add_argument(
-        "--branch",
-        default="main",
-        help="Branch to push (default: main)",
-    )
-    parser.add_argument(
-        "--repo",
-        default="goalvault",
-        help="GitHub repo name when creating with gh",
-    )
-    parser.add_argument(
-        "--visibility",
-        choices=["public", "private"],
-        default="public",
-    )
-    parser.add_argument(
-        "--description",
-        default="GoalVault — AtomQuest Hackathon goal setting & tracking portal",
-    )
-    parser.add_argument(
-        "--create-repo",
-        action="store_true",
-        help="Create GitHub repo with gh if it does not exist",
-    )
-    parser.add_argument(
-        "--no-push",
-        action="store_true",
-        help="Commit only, do not push",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Show what would be staged, no commit/push",
-    )
-    args = parser.parse_args()
-
     os.chdir(ROOT)
     print(f"Repository root: {ROOT}\n")
 
     if not have_cmd("git"):
         sys.exit("git is not installed.")
-    if not args.no_push and not have_cmd("gh"):
-        print("Warning: gh CLI not found. Install from https://cli.github.com/")
-        print("You can still commit locally with --no-push.")
+    if not have_cmd("gh"):
+        sys.exit("gh CLI not found. Install from https://cli.github.com/ to push automatically.")
 
     ensure_gitignore()
     git_init_if_needed()
 
-    if args.dry_run:
-        run(["git", "add", "--dry-run", "-A"])
-        return
-
-    if not add_files():
-        return
-
-    commit(args.message)
-
-    if args.no_push:
-        print("\nCommitted locally. Run without --no-push to upload.")
-        return
-
-    if args.create_repo:
-        if not have_cmd("gh"):
-            sys.exit("gh is required for --create-repo")
-        create_repo_if_needed(args.repo, args.visibility, args.description)
+    if add_files():
+        commit("AtomQuest Hackathon submission - GoalVault")
     else:
-        ensure_remote(args.repo, args.visibility)
+        print("Nothing new to commit, attempting to push existing commits...")
 
-    push(args.branch, set_upstream=True)
-    print("\nDone. View on GitHub: gh repo view --web")
+    repo_name = "goalvault"
+    visibility = "public"
+    description = "GoalVault — AtomQuest Hackathon goal setting & tracking portal"
 
+    create_repo_if_needed(repo_name, visibility, description)
+    ensure_remote(repo_name, visibility)
+
+    push("main", set_upstream=True)
+    print("\n✅ Successfully pushed to GitHub!")
+    print("View on GitHub: gh repo view --web")
 
 if __name__ == "__main__":
     main()

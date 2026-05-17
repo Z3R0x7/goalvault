@@ -12,7 +12,7 @@ GoalVault is a security-first, AI-assisted **Goal Setting & Tracking Portal** fo
 2. [Architecture](#architecture)
 3. [Request Flow](#request-flow)
 4. [Project Structure](#project-structure)
-5. [Quick Start](#quick-start)
+5. [How to Run (Quick Start)](#how-to-run-quick-start)
 6. [Demo Accounts](#demo-accounts)
 7. [Environment Variables](#environment-variables)
 8. [Deployment](#deployment)
@@ -29,7 +29,7 @@ GoalVault is a security-first, AI-assisted **Goal Setting & Tracking Portal** fo
 | **Manager** | Approve/return goals, inline target edits, team view, AI check-in summary |
 | **Admin** | Users, cycle config, completion dashboard, analytics (Chart.js), escalations, audit trail verify, Excel export |
 | **Security** | SHA-256 hash-chain audit log, CSRF, rate limiting, role decorators, security headers |
-| **AI** | Groq Llama 3.1 (optional); demo mode works without API key |
+| **AI** | Groq Llama 3.3 (optional); demo mode works without API key |
 
 ---
 
@@ -108,7 +108,6 @@ sequenceDiagram
 ```
 Aatomquest/
 ├── README.md                 # This file
-├── HOW_TO_RUN.md             # Short run guide
 ├── .gitignore                # Excludes venv, .env, *.db, etc.
 ├── scripts/
 │   └── push_to_github.py     # git + gh commit/push helper
@@ -119,8 +118,6 @@ Aatomquest/
     ├── requirements.txt
     ├── .env.example
     ├── Procfile              # gunicorn for Railway/Render
-    ├── DEPLOYMENT.md         # Hosting & API key security
-    ├── HOW_TO_RUN.md
     └── app/
         ├── __init__.py       # App factory
         ├── extensions.py
@@ -133,21 +130,54 @@ Aatomquest/
 
 ---
 
-## Quick Start
+## How to Run (Quick Start)
 
+### 1. Prerequisites
+- Python 3.10 or newer
+- pip
+
+### 2. Open the Project Folder
 ```bash
 cd goalvault
-python3 -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env              # add GROQ_API_KEY when ready
-python seed_data.py
-python run.py
 ```
 
-Open **http://localhost:8080**
+### 3. Create and Activate Virtual Environment
+**macOS / Linux:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+**Windows:**
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
 
-More detail: [goalvault/HOW_TO_RUN.md](goalvault/HOW_TO_RUN.md)
+### 4. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Configure Environment Variables
+Copy the example env file:
+```bash
+cp .env.example .env
+```
+Edit `.env` and set at minimum:
+- `SECRET_KEY`: Any random string for sessions (Required)
+- `GROQ_API_KEY`: Key from [console.groq.com](https://console.groq.com) for live AI. If empty, it falls back to demo text.
+
+### 6. Seed the Demo Database
+```bash
+python seed_data.py
+```
+This creates three demo users and sample goals with audit log entries.
+
+### 7. Start the Application
+```bash
+python run.py
+```
+Open **http://localhost:8080** in your browser.
 
 ---
 
@@ -165,19 +195,29 @@ More detail: [goalvault/HOW_TO_RUN.md](goalvault/HOW_TO_RUN.md)
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `SECRET_KEY` | Production | Flask session secret |
-| `GROQ_API_KEY` | Optional | Live AI via Groq |
+| `SECRET_KEY` | Yes | Flask session secret |
+| `GROQ_API_KEY` | Optional | Live AI via Groq. (Falls back to demo mode without it). |
 | `DATABASE_URL` | Optional | Default: `sqlite:///goalvault.db` |
 | `FLASK_ENV` | Optional | `development` or `production` |
 | `PORT` | Optional | Default `8080` in `run.py` |
 
-Copy from `goalvault/.env.example`. **Never commit `.env`.**
+**Never commit `.env`.**
 
 ---
 
 ## Deployment
 
-See **[goalvault/DEPLOYMENT.md](goalvault/DEPLOYMENT.md)** for Railway/Render steps and how to keep API keys off GitHub.
+**Production setup:**
+```bash
+pip install gunicorn
+export FLASK_ENV=production
+# Add your production database URL if not using SQLite
+export DATABASE_URL=postgresql://...
+python seed_data.py
+gunicorn run:app --bind 0.0.0.0:5000
+```
+
+Alternatively, use the included `Procfile` to deploy directly to Railway or Render. Simply set your Environment Variables (like `SECRET_KEY` and `GROQ_API_KEY`) in the host's dashboard.
 
 ---
 
@@ -224,7 +264,7 @@ The script and `.gitignore` block these paths:
 
 - **Backend:** Python 3.10+, Flask 3, SQLAlchemy, Flask-Login, Flask-WTF, Flask-Limiter  
 - **Frontend:** Jinja2, Bootstrap 5, Chart.js, custom Vault dark UI  
-- **AI:** Groq API (Llama 3.1 70B), optional  
+- **AI:** Groq API (Llama 3.3 70B), optional  
 - **Export:** openpyxl, pandas  
 
 ---

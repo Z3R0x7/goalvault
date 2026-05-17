@@ -1,29 +1,57 @@
-
 {% extends "base.html" %}
 {% block title %}Check-in — {{ employee.name }}{% endblock %}
+{% block page_title %}{{ quarter }} Check-in{% endblock %}
+{% block page_sub %}Employee: {{ employee.name }}{% endblock %}
 {% block content %}
-<h2 class="mb-3">{{ employee.name }} — {{ quarter }} Check-in</h2>
-<div class="card gv-card mb-3"><div class="table-responsive"><table class="table mb-0">
-<thead><tr><th>Goal</th><th>Planned</th><th>Actual</th><th>Status</th><th>Progress</th></tr></thead>
-<tbody>{% for item in goals_data %}
-<tr><td>{{ item.goal.title }}</td><td>{{ item.goal.target }}</td><td>{{ item.actual }}</td><td>{{ item.status }}</td>
-<td>{% if item.achievement %}{{ item.achievement.progress_score }}%{% else %}—{% endif %}</td></tr>
-{% endfor %}</tbody></table></div></div>
-<button type="button" id="ai-summary-btn" class="btn btn-outline-primary mb-3" data-employee-id="{{ employee.id }}">Generate AI Summary</button>
-<form method="post">{{ form.hidden_tag() }}
-  {{ form.comment(class="form-control mb-2", rows=5, id="checkin-comment") }}
-  {{ form.submit(class="btn btn-primary") }}
-</form>
+<div class="vault-card mb-4 fade-in">
+  <div class="table-responsive">
+    <table class="vault-table">
+      <thead>
+        <tr>
+          <th>Goal</th>
+          <th>Planned</th>
+          <th>Actual</th>
+          <th>Status</th>
+          <th>Progress Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in goals_data %}
+        <tr>
+          <td>{{ item.goal.title }}</td>
+          <td class="data-value">{{ item.goal.target }}</td>
+          <td class="data-value">{{ item.actual }}</td>
+          <td><span class="status-badge badge-{{ item.status.lower() }}">{{ item.status }}</span></td>
+          <td class="data-value">{% if item.achievement %}{{ item.achievement.progress_score }}%{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="vault-card p-4 fade-in" style="animation-delay: 0.1s; max-width: 800px;">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Quarterly Assessment</h5>
+    <button type="button" id="ai-summary-btn" class="btn-vault-ghost btn-sm" data-employee-id="{{ employee.id }}"><i class="bi bi-stars" style="color: var(--accent);"></i> Generate AI Summary</button>
+  </div>
+  
+  <form method="post">
+    {{ form.hidden_tag() }}
+    {{ form.comment(class="form-control vault-input mb-4", rows=5, id="checkin-comment", placeholder="Write performance summary...") }}
+    {{ form.submit(class="btn-vault w-100") }}
+  </form>
+</div>
 {% endblock %}
 {% block scripts %}
 <script>
 document.getElementById('ai-summary-btn')?.addEventListener('click', async () => {
   const btn = document.getElementById('ai-summary-btn');
-  btn.disabled = true; btn.textContent = 'Generating...';
+  btn.disabled = true; btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Generating...';
   const res = await fetch('/manager/api/ai-checkin-summary/{{ employee.id }}?quarter={{ quarter }}');
   const data = await res.json();
   document.getElementById('checkin-comment').value = data.comment;
-  btn.disabled = false; btn.textContent = 'Generate AI Summary';
+  btn.disabled = false; btn.innerHTML = '<i class="bi bi-stars" style="color: var(--accent);"></i> Generate AI Summary';
 });
 </script>
 {% endblock %}

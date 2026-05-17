@@ -1,13 +1,44 @@
-
 {% extends "base.html" %}
 {% block title %}Team Goals{% endblock %}
+{% block page_title %}Team Goals{% endblock %}
+{% block page_sub %}Track objective progress for your direct reports.{% endblock %}
 {% block content %}
-<h2 class="mb-4">Team Goals</h2>
-{% for item in team_data %}
-<div class="card gv-card mb-3"><div class="card-header"><strong>{{ item.employee.name }}</strong> — {{ item.employee.department or 'N/A' }}
-  <a href="{{ url_for('manager.checkin', employee_id=item.employee.id) }}" class="btn btn-sm btn-outline-primary float-end">Q1 Check-in</a>
+<div class="row g-4 fade-in">
+  {% for item in team_data %}
+  <div class="col-12">
+    <div class="vault-card">
+      <div class="vault-card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-person-badge text-secondary me-2"></i><strong>{{ item.employee.name }}</strong> — {{ item.employee.department or 'N/A' }}</span>
+        <a href="{{ url_for('manager.checkin', employee_id=item.employee.id) }}" class="btn-vault-ghost" style="padding: 4px 10px; font-size: 0.8rem;">Q1 Check-in</a>
+      </div>
+      <div class="table-responsive">
+        <table class="vault-table">
+          <thead>
+            <tr>
+              <th>Goal</th>
+              <th>Status</th>
+              <th>Weight</th>
+              <th>Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for g in item.goals %}
+            <tr>
+              <td>{{ g.title }}</td>
+              <td><span class="status-badge badge-{{ g.status.lower() }}">{{ g.status }}</span></td>
+              <td class="data-value">{{ g.weightage }}%</td>
+              <td class="data-value">{{ g.target }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4" class="text-muted text-center py-4">No goals configured.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
-<div class="table-responsive"><table class="table mb-0"><thead><tr><th>Goal</th><th>Status</th><th>Weight</th><th>Target</th></tr></thead>
-<tbody>{% for g in item.goals %}<tr><td>{{ g.title }}</td><td>{{ g.status }}</td><td>{{ g.weightage }}%</td><td>{{ g.target }}</td></tr>{% else %}<tr><td colspan="4" class="text-muted">No goals</td></tr>{% endfor %}</tbody></table></div></div>
-{% endfor %}
 {% endblock %}

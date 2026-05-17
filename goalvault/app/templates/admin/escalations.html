@@ -3,31 +3,60 @@
 {% block page_title %}Escalation Rules{% endblock %}
 {% block page_sub %}Automated accountability triggers{% endblock %}
 {% block content %}
-<form method="post" action="{{ url_for('admin.trigger_escalation') }}" class="mb-3 d-inline">
+<div class="mb-4 fade-in">
+  <form method="post" action="{{ url_for('admin.trigger_escalation') }}" class="d-inline">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn-vault"><i class="bi bi-lightning-charge me-2"></i>Trigger Check Now</button>
+  </form>
+</div>
+
+<form method="post" class="row g-4 fade-in" style="animation-delay: 0.1s;">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button class="btn-vault">Trigger Check Now</button>
-</form>
-<form method="post" class="row g-3 mb-4">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <div class="col-md-4 escalation-card">
-    <h5>Goal Not Submitted</h5>
-    <p class="small text-secondary">Days after window opens</p>
-    <input name="goal_submit_days" type="number" class="form-control vault-input data-value" value="{{ settings.goal_submit_days }}">
-    <p class="mt-2 small">Triggered: {{ by_type.goal_not_submitted|length }}</p>
-    <ul class="small">{% for e in by_type.goal_not_submitted %}<li>{{ e.details }}</li>{% endfor %}</ul>
+  
+  <div class="col-md-4">
+    <div class="vault-card h-100 p-4" style="border-top: 3px solid var(--status-rework);">
+      <h5 class="mb-1">Goal Not Submitted</h5>
+      <p class="small text-secondary mb-3">Days after window opens</p>
+      <input name="goal_submit_days" type="number" class="form-control vault-input data-value mb-3" value="{{ settings.goal_submit_days }}">
+      <div class="p-3 rounded" style="background: var(--bg-elevated);">
+        <p class="mb-2 small font-weight-bold text-secondary">Triggered: <span class="badge rounded-pill bg-danger">{{ by_type.goal_not_submitted|length }}</span></p>
+        <ul class="small mb-0 text-muted ps-3">
+          {% for e in by_type.goal_not_submitted %}<li>{{ e.details }}</li>{% else %}<li>None</li>{% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
-  <div class="col-md-4 escalation-card">
-    <h5>Goal Not Approved</h5>
-    <input name="goal_approve_days" type="number" class="form-control vault-input" value="{{ settings.goal_approve_days }}">
-    <p class="mt-2 small">Triggered: {{ by_type.goal_not_approved|length }}</p>
-    <ul class="small">{% for e in by_type.goal_not_approved %}<li>{{ e.details }}</li>{% endfor %}</ul>
+
+  <div class="col-md-4">
+    <div class="vault-card h-100 p-4" style="border-top: 3px solid var(--status-pending);">
+      <h5 class="mb-1">Goal Not Approved</h5>
+      <p class="small text-secondary mb-3">Days pending manager review</p>
+      <input name="goal_approve_days" type="number" class="form-control vault-input data-value mb-3" value="{{ settings.goal_approve_days }}">
+      <div class="p-3 rounded" style="background: var(--bg-elevated);">
+        <p class="mb-2 small font-weight-bold text-secondary">Triggered: <span class="badge rounded-pill bg-warning text-dark">{{ by_type.goal_not_approved|length }}</span></p>
+        <ul class="small mb-0 text-muted ps-3">
+          {% for e in by_type.goal_not_approved %}<li>{{ e.details }}</li>{% else %}<li>None</li>{% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
-  <div class="col-md-4 escalation-card">
-    <h5>Check-in Missed</h5>
-    <input name="checkin_days" type="number" class="form-control vault-input" value="{{ settings.checkin_days }}">
-    <p class="mt-2 small">Triggered: {{ by_type.checkin_missed|length }}</p>
-    <ul class="small">{% for e in by_type.checkin_missed %}<li>{{ e.details }}</li>{% endfor %}</ul>
+
+  <div class="col-md-4">
+    <div class="vault-card h-100 p-4" style="border-top: 3px solid var(--status-locked);">
+      <h5 class="mb-1">Check-in Missed</h5>
+      <p class="small text-secondary mb-3">Days past due date</p>
+      <input name="checkin_days" type="number" class="form-control vault-input data-value mb-3" value="{{ settings.checkin_days }}">
+      <div class="p-3 rounded" style="background: var(--bg-elevated);">
+        <p class="mb-2 small font-weight-bold text-secondary">Triggered: <span class="badge rounded-pill bg-info text-dark">{{ by_type.checkin_missed|length }}</span></p>
+        <ul class="small mb-0 text-muted ps-3">
+          {% for e in by_type.checkin_missed %}<li>{{ e.details }}</li>{% else %}<li>None</li>{% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
-  <div class="col-12"><button type="submit" class="btn-vault-ghost">Save Thresholds</button></div>
+  
+  <div class="col-12 mt-4 text-end">
+    <button type="submit" class="btn-vault">Save Thresholds</button>
+  </div>
 </form>
 {% endblock %}

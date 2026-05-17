@@ -28,9 +28,9 @@
         </div>
         {{ form.submit(class="btn-vault w-100") }}
       </form>
-      <button type="button" class="btn-microsoft" title="Azure AD SSO — configured for production tenant.">
-        <i class="bi bi-microsoft"></i> Sign in with Microsoft
-      </button>
+      <a href="{{ url_for('auth.login_microsoft') }}" class="btn-microsoft d-block text-center text-decoration-none" title="Azure AD SSO — configured for production tenant." style="cursor: pointer; color: var(--text-primary);">
+        <i class="bi bi-microsoft me-1"></i> Sign in with Microsoft
+      </a>
       <hr class="my-4 border-secondary">
       <p class="small text-muted mb-1">Demo accounts — password: <span class="data-value">Demo@123</span></p>
       <ul class="small text-muted mb-0 ps-3">
